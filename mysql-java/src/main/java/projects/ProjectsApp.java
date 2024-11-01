@@ -15,32 +15,44 @@ import projects.service.ProjectService;
 public class ProjectsApp {
 	private Scanner scanner = new Scanner(System.in);
 	private ProjectService projectService = new ProjectService();
+	private Project curProject;
 	
 	// @formatter:off
 	private List<String> operations = List.of(
-		"1) Add a project"	
+		"1) Add a project",
+		"2) List projects",
+		"3) Select a project"
 	);
 	// @formatter:on
 	
-	//Entry point
+	// Entry point
 	public static void main(String[] args) {
 		new ProjectsApp().processUserSelections();
 	}
-	//Prints operations, user menu
-	//Repeats until user terminates
+	// Prints operations, user menu
+	// Repeats until user terminates
 	private void processUserSelections() {
 		boolean done = false;
 		
 		while(!done) {
 		  try {
 			int selection = getUserSelection();
-			  switch(selection) {
+			  
+			switch(selection) {
 			  	case -1:
 			  	  done = exitMenu();
 			  	  break;
 			  	
 			  	case 1: 
 			  	  createProject();
+			  	  break;
+			  	
+			  	case 2:
+			  	  listProjects();
+			  	  break;
+			  	  
+			  	case 3:
+			  	  selectProject();
 			  	  break;
 			  	  
 			  	default:  
@@ -53,7 +65,30 @@ public class ProjectsApp {
 		  	}
 		}
 	}
-	//Collects user input for project row; calls project service to create row
+	/* Lists project ID's & names so user can select a Project ID
+	 * @param none
+	 * @returns nothing
+	 * if success -> current project set to returned project
+	 */
+	private void selectProject() {
+		listProjects();
+		Integer projectId = getIntInput("Enter a project ID to select a project");
+		// Unselects current project
+		curProject = null;
+		// Throws exception if invalid project ID is entered
+		curProject = projectService.fetchProjectById(projectId);
+	}
+	// No parameters, returns nothing
+	// Prints the ID and name separated by ": ", for each Project 
+	private void listProjects() {
+	  List<Project> projects = projectService.fetchAllProjects();
+	  
+	  System.out.println("\nProjects:");
+	  
+	  projects.forEach(project -> System.out.println("  " + project.getProjectId() + ": " + project.getProjectName()));
+	}
+	
+	// Collects user input for project row; calls project service to create row
 	private void createProject() {
 	  String projectName = getStringInput("Enter the project name");
 	  BigDecimal estimatedHours = getDecimalInput("Enter the estimated hours");
@@ -133,6 +168,13 @@ public class ProjectsApp {
 	// Print menu selections, 1 per line
 	private void printOperations() {
 	  System.out.println("\nThese are the availale selections. Press the 'Enter' key to quit:");
+	  // Mod. to display currently selected project, if any; Prints all details
 	  operations.forEach(line -> System.out.println("  " + line));
+	  // Displays whether or not a project is currently selected
+	  if(Objects.isNull(curProject)) {
+	    System.out.println("\nYou are not working with a project.");
+	  } else {
+		  System.out.println("\nYou are working with project: " + curProject);
+	  }
 	}
 }
