@@ -204,7 +204,7 @@ public class ProjectDao extends DaoBase {
 	public boolean modifyProjectDetails(Project project) {
 		// @formatter:off
 		String sql = ""
-			+ "UPDATE " + PROJECT_TABLE + " SET"
+			+ "UPDATE " + PROJECT_TABLE + " SET "
 			+ "project_name = ?, "
 			+ "estimated_hours = ?, "
 			+ "actual_hours = ?, "
