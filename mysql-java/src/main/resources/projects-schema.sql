@@ -46,3 +46,32 @@ CREATE TABLE project_category (
 		FOREIGN KEY (category_id) REFERENCES category (category_id) ON DELETE CASCADE,
 		UNIQUE KEY	(project_id, category_id)
 );
+
+use projects;
+
+INSERT INTO project (project_name, estimated_hours, actual_hours, difficulty, notes)
+VALUES ('Change a lightbulb', 1, 1, 1, 'Careful! Bulb may be hot'),
+	   ('Mow the lawn', 4, 5, 4, 'Very hot today. Bring extra water'),
+	   ('Fix the roof', 4, 6, 5, 'Leaky roof no more!');
+
+INSERT INTO category (category_name)
+VALUES ('Lights and Appliances'),
+	   ('Gardening'),
+	   ('Home Maintenance');
+	  
+SELECT * FROM project;
+
+INSERT INTO material (project_id, material_name, num_required)
+VALUES (1, '28W light bulb', 6),
+	   (2, 'Lawnmower', 1),
+	   (3, 'Roof shingles', 20);
+
+INSERT INTO step (project_id, step_text, step_order)
+VALUES (1, 'Make sure light switch is turned to OFF prior to changing bulb', 1),
+	   (1, 'Unscrew the old bulb', 2),
+	   (1, 'Screw in the new bulb', 3),
+	   (2, 'Pickup any sticks or rocks before mowing', 1),
+	   (3, 'Find a latter and locate the hole in the roof', 1);
+
+INSERT INTO project_category (project_id, category_id)
+VALUES (1, 1);
